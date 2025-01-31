@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs Completion Layer functions File for Spacemacs
 ;;
-;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -43,18 +43,9 @@
   "Set the face of diretories for `.' and `..'"
   (set-face-attribute 'helm-ff-dotted-directory
                       nil
-                      :foreground nil
-                      :background nil
+                      :foreground 'unspecified
+                      :background 'unspecified
                       :inherit 'helm-ff-directory))
-
-(defun spacemacs//helm-make-source (f &rest args)
-  "Function to be used as advice to activate fuzzy matching for all sources."
-  (let ((source-type (cadr args))
-        (props (cddr args)))
-    ;; fuzzy matching is not supported in async sources
-    (unless (child-of-class-p source-type helm-source-async)
-      (plist-put props :fuzzy-match (eq 'always helm-use-fuzzy))))
-  (apply f args))
 
 (defun spacemacs//helm-find-files-enable-helm--in-fuzzy ()
   "Enabling `helm--in-fuzzy' with the hook:
@@ -204,6 +195,18 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
   (interactive)
   (call-interactively 'helm-select-action)
   (spacemacs//helm-navigation-ts-set-face))
+
+(defun spacemacs//helm-update-header-line-faces ()
+  "Update defaults for `helm' header line whenever a new theme is loaded."
+  ;; TODO factorize face definition with those defined in config.el
+  (setq helm-source-header-default-foreground
+        (face-attribute 'helm-source-header :foreground)
+        helm-source-header-default-background
+        (face-attribute 'helm-source-header :background)
+        helm-source-header-default-box
+        (face-attribute 'helm-source-header :box)
+        helm-source-header-default-height
+        (face-attribute 'helm-source-header :height)))
 
 
 ;; Ivy

@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs Evil Layer functions File
 ;;
-;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -61,11 +61,10 @@ Otherwise, revert to the default behavior (i.e. enable `evil-insert-state')."
           (kbd "TAB") 'iedit-toggle-selection)
         (define-key iedit-occurrence-keymap-default
           [tab] 'iedit-toggle-selection))
-    (progn
-      (define-key iedit-occurrence-keymap-default
-        (kbd "TAB") 'iedit-next-occurrence)
-      (define-key iedit-occurrence-keymap-default
-        [tab] 'iedit-next-occurrence))))
+    (define-key iedit-occurrence-keymap-default
+      (kbd "TAB") 'iedit-next-occurrence)
+    (define-key iedit-occurrence-keymap-default
+      [tab] 'iedit-next-occurrence)))
 
 (defun spacemacs//evil-escape-deactivate-in-holy-mode  (style)
   "Deactivate `evil-escape' if STYLE is `emacs' otherwise enable it."
@@ -73,20 +72,6 @@ Otherwise, revert to the default behavior (i.e. enable `evil-insert-state')."
       (evil-escape-mode t)
     (evil-escape-mode -1)))
 
-(defmacro evil-redirect-digit-argument (map keys target)
-  "This is a temporary fix.
-This is a temporary fix until the PR at URL
-`https://github.com/syl20bnr/evil-iedit-state/pull/37' gets
-merged. Please remove this function as soon as the mentioned PR
-gets merged."
-  (message "This is a temporary fix until
-https://github.com/syl20bnr/evil-iedit-state/pull/37 gets merged.
-Please remove this function as soon as the mentioned PR gets
-merged.")
-  `(define-key ,map ,keys ,target))
-
-;;; Needed while https://github.com/syl20bnr/evil-iedit-state/pull/37 is not merged
-(defalias 'evil-digit-argument-or-evil-beginning-of-line 'evil-beginning-of-line)
 
 ;; vi-tilde-fringe
 
@@ -104,4 +89,5 @@ merged.")
 
 (defun spacemacs//load-evil-lisp-state ()
   "Load evil-lisp-state lazily"
-  (require 'evil-lisp-state))
+  (require 'evil-lisp-state)
+  (remove-hook 'prog-mode-hook #'spacemacs//load-evil-lisp-state))
